@@ -36,6 +36,7 @@ class EventAdapter : RecyclerView.Adapter<EventAdapter.EventAdapterViewHolder>()
         holder.binding.apply {
             date.text = item.date.toString()
             name.text = item.name
+            status.text = item.eventStatus.description
         }
     }
 
