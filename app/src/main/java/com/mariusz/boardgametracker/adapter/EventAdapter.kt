@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.mariusz.boardgametracker.R
 import com.mariusz.boardgametracker.databinding.EventAdapterBinding
 import com.mariusz.boardgametracker.domain.Event
+import com.mariusz.boardgametracker.domain.EventStatus
 
 class EventAdapter : RecyclerView.Adapter<EventAdapter.EventAdapterViewHolder>() {
 
@@ -36,7 +38,13 @@ class EventAdapter : RecyclerView.Adapter<EventAdapter.EventAdapterViewHolder>()
         holder.binding.apply {
             date.text = item.date.toString()
             name.text = item.name
-            status.text = item.eventStatus.description
+            eventIcon.setImageResource(
+                when (item.eventStatus) {
+                    EventStatus.SCHEDULED -> R.drawable.event_scheduled
+                    EventStatus.OPEN -> R.drawable.event_open
+                    EventStatus.CLOSED -> R.drawable.event_finished
+                }
+            )
         }
     }
 
