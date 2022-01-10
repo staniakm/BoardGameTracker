@@ -11,6 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BoardGameTracker">
         <activity
+            android:name=".ui.EventHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.EventActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
