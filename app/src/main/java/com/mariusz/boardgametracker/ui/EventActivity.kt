@@ -10,7 +10,6 @@ class EventActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEventBinding
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEventBinding.inflate(layoutInflater)
