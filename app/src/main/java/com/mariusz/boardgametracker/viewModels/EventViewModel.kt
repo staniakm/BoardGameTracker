@@ -3,7 +3,7 @@ package com.mariusz.boardgametracker.viewModels
 import androidx.lifecycle.ViewModel
 import com.mariusz.boardgametracker.domain.Event
 import com.mariusz.boardgametracker.domain.EventStatus
-import com.mariusz.boardgametracker.ui.InMemoryEventTable
+import com.mariusz.boardgametracker.database.InMemoryEventTable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject

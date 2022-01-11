@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mariusz.boardgametracker.GameListActivity
 import com.mariusz.boardgametracker.R
 import com.mariusz.boardgametracker.adapter.EventAdapter
 import com.mariusz.boardgametracker.databinding.ActivityMainBinding

@@ -1,5 +1,6 @@
-package com.mariusz.boardgametracker.ui
+package com.mariusz.boardgametracker.database
 
+import com.mariusz.boardgametracker.domain.BoardGame
 import com.mariusz.boardgametracker.domain.Event
 import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicInteger
@@ -15,6 +16,17 @@ object InMemoryEventTable {
     fun getEvents(): List<Event> {
         return database.map { it.value }
     }
+}
 
+object InMemoryGamesTable {
+    private val idCounter: AtomicInteger = AtomicInteger(0)
+    private val database: MutableMap<Int, BoardGame> = mutableMapOf(
+        Pair(1, BoardGame(1, "Century"))
+    )
 
+    fun getId() = idCounter.incrementAndGet()
+    fun addGame(game: BoardGame) = database.put(game.id, game)
+    fun getGames(): List<BoardGame> {
+        return database.map { it.value }
+    }
 }
