@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mariusz.boardgametracker.GameListActivity
 import com.mariusz.boardgametracker.R
 import com.mariusz.boardgametracker.adapter.EventAdapter
 import com.mariusz.boardgametracker.databinding.ActivityMainBinding
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         eventAdapter = EventAdapter(onItemClick)
         binding.rvEvent.layoutManager = LinearLayoutManager(this)
         binding.rvEvent.adapter = eventAdapter
-//        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.toolbar)
 
         binding.fab.setOnClickListener {
             newEventDialog()
@@ -104,8 +105,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_games -> openGameListView()
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun openGameListView(): Boolean {
+        Intent(this, GameListActivity::class.java).let {
+            startActivity(it)
+        }
+        return true
     }
 }

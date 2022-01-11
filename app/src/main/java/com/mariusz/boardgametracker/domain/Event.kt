@@ -1,5 +1,6 @@
 package com.mariusz.boardgametracker.domain
 
+import com.mariusz.boardgametracker.R
 import java.io.Serializable
 import java.time.LocalDate
 
@@ -10,6 +11,6 @@ data class Event(
     val eventStatus: EventStatus = EventStatus.OPEN
 ) : Serializable
 
-enum class EventStatus(val description: String) {
-    SCHEDULED("Zaplanowany"), OPEN("W trakcie"), CLOSED("Zakończony")
+enum class EventStatus(val iconId: Int) {
+    SCHEDULED(R.drawable.event_scheduled), OPEN(R.drawable.event_open), CLOSED(R.drawable.event_finished)
 }
