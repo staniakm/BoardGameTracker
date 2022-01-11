@@ -10,9 +10,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EventViewModel @Inject constructor(private val eventTable: InMemoryEventTable) : ViewModel() {
-    fun storeEvent(event: String, eventDate: LocalDate) {
-        getEventStatus(eventDate).let {
-            eventTable.addEvent(Event(eventTable.getId(), event, eventDate, it))
+    fun storeEvent(event: String, eventDate: LocalDate): Event {
+        return getEventStatus(eventDate).let { status ->
+            Event(eventTable.getId(), event, eventDate, status).let {
+                eventTable.addEvent(it)
+                it
+            }
+
         }
     }
 

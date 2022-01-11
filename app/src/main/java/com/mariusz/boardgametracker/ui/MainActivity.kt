@@ -15,6 +15,7 @@ import com.mariusz.boardgametracker.R
 import com.mariusz.boardgametracker.adapter.EventAdapter
 import com.mariusz.boardgametracker.databinding.ActivityMainBinding
 import com.mariusz.boardgametracker.databinding.AddEventViewBinding
+import com.mariusz.boardgametracker.domain.Event
 import com.mariusz.boardgametracker.functions.toLocalDate
 import com.mariusz.boardgametracker.viewModels.EventViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,8 +25,8 @@ import java.time.LocalDate
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val eventViewModel: EventViewModel by viewModels()
     private val TAG: String = "MainActivity"
+    private val eventViewModel: EventViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
     private lateinit var addEventBinding: AddEventViewBinding
     private lateinit var eventAdapter: EventAdapter
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         addEventBinding = AddEventViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        eventAdapter = EventAdapter()
+        eventAdapter = EventAdapter(onItemClick)
         binding.rvEvent.layoutManager = LinearLayoutManager(this)
         binding.rvEvent.adapter = eventAdapter
 //        setSupportActionBar(binding.toolbar)
@@ -44,6 +45,20 @@ class MainActivity : AppCompatActivity() {
         binding.fab.setOnClickListener {
             newEventDialog()
         }
+        loadData()
+    }
+
+    private fun loadData() {
+        eventViewModel.getEvents().let {
+            eventAdapter.submitList(it)
+        }
+
+    }
+
+    private val onItemClick: (event: Event) -> Unit = { event: Event ->
+        val intent = Intent(this, EventActivity::class.java)
+        intent.putExtra("event", event)
+        startActivity(intent)
     }
 
     @SuppressLint("ResourceType")
@@ -74,14 +89,12 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "createNewEvent: $eventName $eventDate")
         //save new event in database
         eventViewModel.storeEvent(eventName, eventDate)
-        //open event indent
-        eventViewModel.getEvents().let {
-            it.forEach { event ->
-                println(event)
+            .let {
+                eventAdapter.addNewEvent(it)
+                val intent = Intent(this, EventActivity::class.java)
+                intent.putExtra("event", it)
+                startActivity(intent)
             }
-            eventAdapter.submitList(it)
-        }
-        startActivity(Intent(this, EventActivity::class.java))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

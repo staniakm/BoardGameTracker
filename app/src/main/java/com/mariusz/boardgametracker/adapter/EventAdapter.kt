@@ -10,7 +10,8 @@ import com.mariusz.boardgametracker.databinding.EventAdapterBinding
 import com.mariusz.boardgametracker.domain.Event
 import com.mariusz.boardgametracker.domain.EventStatus
 
-class EventAdapter : RecyclerView.Adapter<EventAdapter.EventAdapterViewHolder>() {
+class EventAdapter(val onItemClick: (Event) -> Unit) :
+    RecyclerView.Adapter<EventAdapter.EventAdapterViewHolder>() {
 
     inner class EventAdapterViewHolder(val binding: EventAdapterBinding) :
         RecyclerView.ViewHolder(binding.root) {}
@@ -45,11 +46,22 @@ class EventAdapter : RecyclerView.Adapter<EventAdapter.EventAdapterViewHolder>()
                     EventStatus.CLOSED -> R.drawable.event_finished
                 }
             )
+            eventLayout.setOnClickListener {
+                onItemClick(item)
+            }
         }
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
+    }
+
+    fun addNewEvent(event: Event) {
+        differ.currentList.toMutableList().apply {
+            add(event)
+        }.let {
+            submitList(it.toList())
+        }
     }
 
 
