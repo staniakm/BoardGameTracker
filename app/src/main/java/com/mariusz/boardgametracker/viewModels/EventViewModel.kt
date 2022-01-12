@@ -1,15 +1,21 @@
 package com.mariusz.boardgametracker.viewModels
 
 import androidx.lifecycle.ViewModel
+import com.mariusz.boardgametracker.database.InMemoryEventGameTable
 import com.mariusz.boardgametracker.database.InMemoryEventTable
+import com.mariusz.boardgametracker.domain.BoardGame
 import com.mariusz.boardgametracker.domain.Event
+import com.mariusz.boardgametracker.domain.EventGame
 import com.mariusz.boardgametracker.domain.EventStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class EventViewModel @Inject constructor(private val eventTable: InMemoryEventTable) : ViewModel() {
+class EventViewModel @Inject constructor(
+    private val eventTable: InMemoryEventTable,
+    private val eventGameTable: InMemoryEventGameTable
+) : ViewModel() {
     fun storeEvent(event: String, eventDate: LocalDate): Event {
         return getEventStatus(eventDate).let { status ->
             Event(eventTable.getId(), event, eventDate, status).let {
@@ -36,4 +42,8 @@ class EventViewModel @Inject constructor(private val eventTable: InMemoryEventTa
     fun startEvent(eventId: Int) = eventTable.changeStatus(eventId, EventStatus.OPEN)
 
     fun finishEvent(eventId: Int) = eventTable.changeStatus(eventId, EventStatus.CLOSED)
+
+    fun addEventGame(eventId: Int, boardgameInt: Int) {
+        eventGameTable.addGameEvent(EventGame(eventGameTable.getId(), eventId, boardgameInt))
+    }
 }

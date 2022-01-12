@@ -6,7 +6,11 @@ data class BoardGame(
     val id: Int,
     val name: String,
     val gameStatus: BoardGameStatus = BoardGameStatus.HOME
-)
+) {
+    override fun toString(): String {
+        return name
+    }
+}
 
 enum class BoardGameStatus(val iconId: Int) {
 

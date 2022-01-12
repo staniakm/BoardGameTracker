@@ -13,7 +13,7 @@ import com.mariusz.boardgametracker.databinding.ActivityGameListBinding
 import com.mariusz.boardgametracker.databinding.AddGameViewBinding
 import com.mariusz.boardgametracker.domain.BoardGame
 import com.mariusz.boardgametracker.domain.BoardGameStatus
-import com.mariusz.boardgametracker.viewModels.BoardGameView
+import com.mariusz.boardgametracker.viewModels.BoardGameViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,7 +21,7 @@ class GameListActivity : AppCompatActivity() {
 
     private val TAG = "GameListActivity"
 
-    private val gamesViewModel: BoardGameView by viewModels()
+    private val gamesViewModelModel: BoardGameViewModel by viewModels()
     private lateinit var binding: ActivityGameListBinding
     private lateinit var addGameBinding: AddGameViewBinding
     private lateinit var gamesAdapter: GamesAdapter
@@ -44,7 +44,7 @@ class GameListActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
-        gamesViewModel.getAllGames().let {
+        gamesViewModelModel.getAllGames().let {
             gamesAdapter.submitList(it)
         }
     }
@@ -78,7 +78,7 @@ class GameListActivity : AppCompatActivity() {
     }
 
     private fun createNewGame(gameTitle: String, gameStatus: BoardGameStatus) {
-        gamesViewModel.addGame(gameTitle, gameStatus).let {
+        gamesViewModelModel.addGame(gameTitle, gameStatus).let {
             gamesAdapter.addNewGame(it)
         }
     }

@@ -14,3 +14,5 @@ data class Event(
 enum class EventStatus(val iconId: Int) {
     SCHEDULED(R.drawable.event_scheduled), OPEN(R.drawable.event_open), CLOSED(R.drawable.event_finished)
 }
+
+data class EventGame(val id: Int, val eventId: Int, val gameId: Int)
