@@ -33,11 +33,7 @@ class EventViewModel @Inject constructor(private val eventTable: InMemoryEventTa
         return eventTable.getEvents().sortedBy { it.date }
     }
 
-    fun startEvent(eventId: Int) {
-        eventTable.changeStatus(eventId, EventStatus.OPEN)
-    }
+    fun startEvent(eventId: Int) = eventTable.changeStatus(eventId, EventStatus.OPEN)
 
-    fun finishEvent(eventId: Int) {
-        eventTable.changeStatus(eventId, EventStatus.CLOSED)
-    }
+    fun finishEvent(eventId: Int) = eventTable.changeStatus(eventId, EventStatus.CLOSED)
 }

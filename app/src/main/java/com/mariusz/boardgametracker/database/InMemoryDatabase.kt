@@ -18,8 +18,12 @@ object InMemoryEventTable {
         return database.map { it.value }
     }
 
-    fun changeStatus(eventId: Int, status: EventStatus) {
-        database[eventId] = database[eventId]!!.copy(eventStatus = status)
+    fun changeStatus(eventId: Int, status: EventStatus): Event {
+        return database[eventId]!!.copy(eventStatus = status).let {
+            database[eventId] = it
+            it
+        }
+
     }
 }
 
