@@ -2,6 +2,7 @@ package com.mariusz.boardgametracker.database
 
 import com.mariusz.boardgametracker.domain.BoardGame
 import com.mariusz.boardgametracker.domain.Event
+import com.mariusz.boardgametracker.domain.EventStatus
 import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -15,6 +16,10 @@ object InMemoryEventTable {
     fun addEvent(event: Event) = database.put(event.id, event)
     fun getEvents(): List<Event> {
         return database.map { it.value }
+    }
+
+    fun changeStatus(eventId: Int, status: EventStatus) {
+        database[eventId] = database[eventId]!!.copy(eventStatus = status)
     }
 }
 

@@ -1,9 +1,9 @@
 package com.mariusz.boardgametracker.viewModels
 
 import androidx.lifecycle.ViewModel
+import com.mariusz.boardgametracker.database.InMemoryEventTable
 import com.mariusz.boardgametracker.domain.Event
 import com.mariusz.boardgametracker.domain.EventStatus
-import com.mariusz.boardgametracker.database.InMemoryEventTable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
@@ -31,5 +31,13 @@ class EventViewModel @Inject constructor(private val eventTable: InMemoryEventTa
 
     fun getEvents(): List<Event> {
         return eventTable.getEvents().sortedBy { it.date }
+    }
+
+    fun startEvent(eventId: Int) {
+        eventTable.changeStatus(eventId, EventStatus.OPEN)
+    }
+
+    fun finishEvent(eventId: Int) {
+        eventTable.changeStatus(eventId, EventStatus.CLOSED)
     }
 }

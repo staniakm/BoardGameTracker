@@ -48,6 +48,11 @@ class MainActivity : AppCompatActivity() {
         loadData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadData()
+    }
+
     private fun loadData() {
         eventViewModel.getEvents().let {
             eventAdapter.submitList(it)

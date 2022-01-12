@@ -1,5 +1,6 @@
 package com.mariusz.boardgametracker.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -7,6 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mariusz.boardgametracker.databinding.EventAdapterBinding
 import com.mariusz.boardgametracker.domain.Event
+import com.mariusz.boardgametracker.domain.EventStatus
+import java.time.LocalDate
 
 class EventAdapter(val onItemClick: (Event) -> Unit) :
     RecyclerView.Adapter<EventAdapter.EventAdapterViewHolder>() {
@@ -39,6 +42,12 @@ class EventAdapter(val onItemClick: (Event) -> Unit) :
             name.text = item.name
             item.eventStatus.let {
                 eventIcon.setImageResource(it.iconId)
+            }
+
+            if (item.date == LocalDate.now() && item.eventStatus != EventStatus.CLOSED || item.eventStatus == EventStatus.OPEN) {
+                eventLayout.setBackgroundColor(Color.GREEN)
+            } else {
+                eventLayout.setBackgroundColor(0)
             }
 
             eventLayout.setOnClickListener {
