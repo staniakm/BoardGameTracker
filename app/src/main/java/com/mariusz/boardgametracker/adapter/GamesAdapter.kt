@@ -52,9 +52,9 @@ class GamesAdapter(private val onItemClick: (game: BoardGame) -> Unit) :
         return differ.currentList.size
     }
 
-    fun addNewGame(event: BoardGame) {
+    fun addNewGame(game: BoardGame) {
         differ.currentList.toMutableList().apply {
-            add(event)
+            add(game)
         }.let {
             submitList(it.toList())
         }

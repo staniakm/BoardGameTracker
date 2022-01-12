@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicInteger
 
 object InMemoryEventTable {
-    private val idCounter: AtomicInteger = AtomicInteger(0)
+    private val idCounter: AtomicInteger = AtomicInteger(1)
     private val database: MutableMap<Int, Event> = mutableMapOf(
         Pair(1, Event(1, "Event", date = LocalDate.now()))
     )
@@ -19,13 +19,13 @@ object InMemoryEventTable {
 }
 
 object InMemoryGamesTable {
-    private val idCounter: AtomicInteger = AtomicInteger(0)
+    private val idCounter: AtomicInteger = AtomicInteger(1)
     private val database: MutableMap<Int, BoardGame> = mutableMapOf(
         Pair(1, BoardGame(1, "Century"))
     )
 
     fun getId() = idCounter.incrementAndGet()
-    fun addGame(game: BoardGame) = database.put(game.id, game)
+    fun addGame(game: BoardGame) = database.getOrPut(game.id) { game }
     fun getGames(): List<BoardGame> {
         return database.map { it.value }
     }

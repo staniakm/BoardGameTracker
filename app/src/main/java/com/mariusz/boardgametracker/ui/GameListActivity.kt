@@ -78,6 +78,8 @@ class GameListActivity : AppCompatActivity() {
     }
 
     private fun createNewGame(gameTitle: String, gameStatus: BoardGameStatus) {
-        Log.i(TAG, "createNewGame: $gameTitle, $gameStatus")
+        gamesViewModel.addGame(gameTitle, gameStatus).let {
+            gamesAdapter.addNewGame(it)
+        }
     }
 }
