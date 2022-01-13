@@ -1,9 +1,6 @@
 package com.mariusz.boardgametracker.database
 
-import com.mariusz.boardgametracker.domain.BoardGame
-import com.mariusz.boardgametracker.domain.Event
-import com.mariusz.boardgametracker.domain.EventGame
-import com.mariusz.boardgametracker.domain.EventStatus
+import com.mariusz.boardgametracker.domain.*
 import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -36,12 +33,21 @@ object InMemoryEventGameTable {
     fun addGameEvent(event: EventGame) {
         database[event.id] = event
     }
-    fun getEvents(): List<EventGame> {
-        return database.map { it.value }
-    }
 
     fun getAllGames(eventId: Int): List<EventGame> {
         return database.values.filter { it.eventId == eventId }
+    }
+}
+
+object InMemoryEventAttendeeTable {
+    private val database: MutableList<EventAttendee> = mutableListOf()
+
+    fun getAllAttendeeIdForEvent(eventId: Int): List<EventAttendee> {
+        return database.filter { it.eventId == eventId }
+    }
+
+    fun addEventAttendee(attendee: EventAttendee) {
+        database.add(attendee)
     }
 }
 
@@ -65,5 +71,26 @@ object InMemoryGamesTable {
 
     fun getGamesById(keys: List<Int>): List<BoardGame> {
         return database.filterKeys { keys.contains(it) }.values.toList()
+    }
+}
+
+object InMemoryAttendeeTable {
+    private val idCounter: AtomicInteger = AtomicInteger(1)
+    private val database: MutableMap<Int, Attendee> = mutableMapOf()
+
+    fun getId() = idCounter.incrementAndGet()
+    fun addAttendee(attendee: Attendee): Attendee {
+        return attendee.let {
+            database[attendee.id] = attendee
+            attendee
+        }
+    }
+
+    fun getAttendees(): List<Attendee> {
+        return database.values.toList()
+    }
+
+    fun getSelectedAttendees(attendeeIds: List<Int>): List<Attendee> {
+        return database.filterKeys { attendeeIds.contains(it) }.values.toList()
     }
 }

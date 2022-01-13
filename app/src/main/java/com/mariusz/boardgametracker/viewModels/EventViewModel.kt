@@ -1,12 +1,10 @@
 package com.mariusz.boardgametracker.viewModels
 
 import androidx.lifecycle.ViewModel
+import com.mariusz.boardgametracker.database.InMemoryEventAttendeeTable
 import com.mariusz.boardgametracker.database.InMemoryEventGameTable
 import com.mariusz.boardgametracker.database.InMemoryEventTable
-import com.mariusz.boardgametracker.domain.BoardGame
-import com.mariusz.boardgametracker.domain.Event
-import com.mariusz.boardgametracker.domain.EventGame
-import com.mariusz.boardgametracker.domain.EventStatus
+import com.mariusz.boardgametracker.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
@@ -14,7 +12,8 @@ import javax.inject.Inject
 @HiltViewModel
 class EventViewModel @Inject constructor(
     private val eventTable: InMemoryEventTable,
-    private val eventGameTable: InMemoryEventGameTable
+    private val eventGameTable: InMemoryEventGameTable,
+    private val eventAttendeeTable: InMemoryEventAttendeeTable
 ) : ViewModel() {
     fun storeEvent(event: String, eventDate: LocalDate): Event {
         return getEventStatus(eventDate).let { status ->
@@ -45,5 +44,13 @@ class EventViewModel @Inject constructor(
 
     fun addEventGame(eventId: Int, boardgameInt: Int) {
         eventGameTable.addGameEvent(EventGame(eventGameTable.getId(), eventId, boardgameInt))
+    }
+
+    fun addEventAttendee(id: Int, selectedAttendee: Attendee) {
+        eventAttendeeTable.addEventAttendee(EventAttendee(id, selectedAttendee.id))
+    }
+
+    fun getAllAttendeesIds(eventId: Int): List<Int> {
+        return eventAttendeeTable.getAllAttendeeIdForEvent(eventId).map { it.attendeeId }
     }
 }

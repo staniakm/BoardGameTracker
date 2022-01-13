@@ -14,11 +14,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mariusz.boardgametracker.adapter.AttendeeAdapter
 import com.mariusz.boardgametracker.adapter.GamesAdapter
 import com.mariusz.boardgametracker.databinding.ActivityEventBinding
+import com.mariusz.boardgametracker.domain.Attendee
 import com.mariusz.boardgametracker.domain.BoardGame
 import com.mariusz.boardgametracker.domain.Event
-import com.mariusz.boardgametracker.domain.EventAttendee
 import com.mariusz.boardgametracker.domain.EventStatus
 import com.mariusz.boardgametracker.viewModels.AttendeeGameViewModel
 import com.mariusz.boardgametracker.viewModels.BoardGameViewModel
@@ -36,6 +37,7 @@ class EventActivity : AppCompatActivity() {
     private lateinit var event: Event
 
     private lateinit var gameAdapter: GamesAdapter
+    private lateinit var attendeeAdapter: AttendeeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +45,12 @@ class EventActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         gameAdapter = GamesAdapter { Log.i(TAG, "onCreate: game clicked") }
+        attendeeAdapter = AttendeeAdapter { Log.i(TAG, "onCreate: attendee clicked") }
+
         binding.rvGames.layoutManager = LinearLayoutManager(this)
         binding.rvGames.adapter = gameAdapter
+        binding.rvParticipants.layoutManager = LinearLayoutManager(this)
+        binding.rvParticipants.adapter = attendeeAdapter
 
         intent.extras?.let { extras ->
             event = extras.getSerializable("event") as Event
@@ -101,9 +107,9 @@ class EventActivity : AppCompatActivity() {
 
     @SuppressLint("ResourceType")
     private fun newEventPersonDialog() {
-        var selectedAttendee: EventAttendee? = null
+        var selectedAttendee: Attendee? = null
         val attendeeList = attendeeViewModelModel.getAllAttendee()
-        val attendees = ArrayAdapter<EventAttendee>(this, R.layout.simple_spinner_dropdown_item)
+        val attendees = ArrayAdapter<Attendee>(this, R.layout.simple_spinner_dropdown_item)
         attendees.notifyDataSetChanged()
         attendees.addAll(attendeeList)
         val tv = AutoCompleteTextView(this)
@@ -112,20 +118,35 @@ class EventActivity : AppCompatActivity() {
         tv.setSelection(0)
 
         tv.setOnItemClickListener { parent, view, position, id ->
-            selectedAttendee = parent.getItemAtPosition(position) as EventAttendee
+            selectedAttendee = parent.getItemAtPosition(position) as Attendee
         }
         val alert: AlertDialog.Builder = AlertDialog.Builder(this)
         alert.setTitle("Select attendee")
             .setView(tv)
             .setPositiveButton("OK") { _, _ ->
                 if (selectedAttendee == null) {
-                    selectedAttendee = EventAttendee(-1, tv.text.toString())
+                    selectedAttendee = Attendee(-1, tv.text.toString())
                 }
                 Log.i(TAG, "newGameDialog: attendee $selectedAttendee")
-
+                addEventAttendee(selectedAttendee!!)
             }
             .setNegativeButton("Cancel") { _, _ -> {} }
         alert.show()
+    }
+
+    private fun addEventAttendee(selectedAttendee: Attendee) {
+        processAttendee(selectedAttendee).let {
+            eventViewModel.addEventAttendee(event.id, it)
+            attendeeAdapter.addAttendee(it)
+        }
+    }
+
+    private fun processAttendee(selectedAttendee: Attendee): Attendee {
+        return if (selectedAttendee.id == -1) {
+            attendeeViewModelModel.createNewAttendee(selectedAttendee)
+        } else {
+            selectedAttendee
+        }
     }
 
     private fun addNewEventGame(game: BoardGame) {
@@ -161,5 +182,9 @@ class EventActivity : AppCompatActivity() {
             }
         }
         gameAdapter.submitList(gameViewModelModel.getEventGames(event.id))
+        eventViewModel.getAllAttendeesIds(event.id).let {
+            attendeeAdapter.submitList(attendeeViewModelModel.getAttendees(it))
+        }
+
     }
 }

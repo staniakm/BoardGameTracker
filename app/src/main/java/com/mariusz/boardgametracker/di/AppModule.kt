@@ -1,8 +1,6 @@
 package com.mariusz.boardgametracker.di
 
-import com.mariusz.boardgametracker.database.InMemoryEventGameTable
-import com.mariusz.boardgametracker.database.InMemoryEventTable
-import com.mariusz.boardgametracker.database.InMemoryGamesTable
+import com.mariusz.boardgametracker.database.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,4 +21,12 @@ object AppModule {
     @Singleton
     @Provides
     fun provideEventGameTable() = InMemoryEventGameTable
+
+    @Singleton
+    @Provides
+    fun provideAttendeeTable() = InMemoryAttendeeTable
+
+    @Singleton
+    @Provides
+    fun provideEventAttendeeTable() = InMemoryEventAttendeeTable
 }
