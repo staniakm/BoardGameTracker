@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.Spinner
 import androidx.activity.viewModels
@@ -17,7 +18,9 @@ import com.mariusz.boardgametracker.adapter.GamesAdapter
 import com.mariusz.boardgametracker.databinding.ActivityEventBinding
 import com.mariusz.boardgametracker.domain.BoardGame
 import com.mariusz.boardgametracker.domain.Event
+import com.mariusz.boardgametracker.domain.EventAttendee
 import com.mariusz.boardgametracker.domain.EventStatus
+import com.mariusz.boardgametracker.viewModels.AttendeeGameViewModel
 import com.mariusz.boardgametracker.viewModels.BoardGameViewModel
 import com.mariusz.boardgametracker.viewModels.EventViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +31,7 @@ class EventActivity : AppCompatActivity() {
     private val TAG: String = "Event activity"
     private val eventViewModel: EventViewModel by viewModels()
     private val gameViewModelModel: BoardGameViewModel by viewModels()
+    private val attendeeViewModelModel: AttendeeGameViewModel by viewModels()
     private lateinit var binding: ActivityEventBinding
     private lateinit var event: Event
 
@@ -58,20 +62,19 @@ class EventActivity : AppCompatActivity() {
         }
 
         binding.participants.setOnClickListener {
-            showHide(binding.games, binding.rvParticipants, binding.rvGames)
+            showHide(binding.games, binding.rvParticipants)
             setFabEvent {
-                Log.i(TAG, "onCreate: add participant")
+                newEventPersonDialog()
             }
         }
 
         binding.games.setOnClickListener {
-            showHide(binding.participants, binding.rvGames, binding.rvParticipants)
+            showHide(binding.participants, binding.rvGames)
             setFabEvent {
                 newGameDialog()
             }
         }
     }
-
 
     @SuppressLint("ResourceType")
     private fun newGameDialog() {
@@ -96,12 +99,41 @@ class EventActivity : AppCompatActivity() {
         alert.show()
     }
 
+    @SuppressLint("ResourceType")
+    private fun newEventPersonDialog() {
+        var selectedAttendee: EventAttendee? = null
+        val attendeeList = attendeeViewModelModel.getAllAttendee()
+        val attendees = ArrayAdapter<EventAttendee>(this, R.layout.simple_spinner_dropdown_item)
+        attendees.notifyDataSetChanged()
+        attendees.addAll(attendeeList)
+        val tv = AutoCompleteTextView(this)
+
+        tv.setAdapter(attendees)
+        tv.setSelection(0)
+
+        tv.setOnItemClickListener { parent, view, position, id ->
+            selectedAttendee = parent.getItemAtPosition(position) as EventAttendee
+        }
+        val alert: AlertDialog.Builder = AlertDialog.Builder(this)
+        alert.setTitle("Select attendee")
+            .setView(tv)
+            .setPositiveButton("OK") { _, _ ->
+                if (selectedAttendee == null) {
+                    selectedAttendee = EventAttendee(-1, tv.text.toString())
+                }
+                Log.i(TAG, "newGameDialog: attendee $selectedAttendee")
+
+            }
+            .setNegativeButton("Cancel") { _, _ -> {} }
+        alert.show()
+    }
+
     private fun addNewEventGame(game: BoardGame) {
         eventViewModel.addEventGame(event.id, game.id)
         gameAdapter.addNewGame(game)
     }
 
-    private fun showHide(button: Button, rvToShow: RecyclerView, rvToHide: RecyclerView) {
+    private fun showHide(button: Button, rvToShow: RecyclerView) {
         if (button.visibility == View.GONE) {
             button.visibility = View.VISIBLE
             rvToShow.visibility = View.GONE
