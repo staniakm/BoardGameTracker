@@ -15,7 +15,7 @@ class GamesAdapter(private val onItemClick: (game: BoardGame) -> Unit) :
 
     private val diffCallback = object : DiffUtil.ItemCallback<BoardGame>() {
         override fun areItemsTheSame(oldItem: BoardGame, newItem: BoardGame): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.name == newItem.name
         }
 
         override fun areContentsTheSame(oldItem: BoardGame, newItem: BoardGame): Boolean {
@@ -54,7 +54,8 @@ class GamesAdapter(private val onItemClick: (game: BoardGame) -> Unit) :
 
     fun addNewGame(game: BoardGame) {
         differ.currentList.toMutableList().apply {
-            add(game)
+            if (this.none { it.name.equals(game.name, true) })
+                add(game)
         }.let {
             submitList(it.toList())
         }

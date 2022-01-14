@@ -59,10 +59,12 @@ object InMemoryGamesTable {
 
     fun getId() = idCounter.incrementAndGet()
     fun addGame(game: BoardGame): BoardGame {
-        return database.getOrPut(game.id) { game }.let {
-            println(it)
-            it
-        }
+        return database.values.firstOrNull { it.name.uppercase() == game.name.uppercase() }
+            ?: database.getOrPut(game.id) { game }
+                .let {
+                    println(it)
+                    it
+                }
     }
 
     fun getGames(): List<BoardGame> {

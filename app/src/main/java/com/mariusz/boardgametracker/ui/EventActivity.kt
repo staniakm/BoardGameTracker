@@ -127,7 +127,6 @@ class EventActivity : AppCompatActivity() {
                 if (selectedAttendee == null) {
                     selectedAttendee = Attendee(-1, tv.text.toString())
                 }
-                Log.i(TAG, "newGameDialog: attendee $selectedAttendee")
                 addEventAttendee(selectedAttendee!!)
             }
             .setNegativeButton("Cancel") { _, _ -> {} }

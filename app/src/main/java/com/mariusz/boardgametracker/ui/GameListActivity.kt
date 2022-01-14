@@ -59,7 +59,7 @@ class GameListActivity : AppCompatActivity() {
             (it as ViewGroup).removeView(addGameBinding.root)
         }
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle("Create new event")
+        builder.setTitle("Create new game")
 
         builder.setView(addGameBinding.root)
         builder.setPositiveButton("OK") { _, _ ->
@@ -78,8 +78,9 @@ class GameListActivity : AppCompatActivity() {
     }
 
     private fun createNewGame(gameTitle: String, gameStatus: BoardGameStatus) {
-        gamesViewModelModel.addGame(gameTitle, gameStatus).let {
-            gamesAdapter.addNewGame(it)
-        }
+        gamesViewModelModel.addGame(gameTitle, gameStatus)
+            .let {
+                gamesAdapter.addNewGame(it)
+            }
     }
 }
