@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.mariusz.boardgametracker.database.*
 import com.mariusz.boardgametracker.domain.EventDao
+import com.mariusz.boardgametracker.domain.EventGameDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,5 +54,10 @@ class DatabaseModule {
     @Provides
     fun provideEventDao(appDatabase: EventDatabase): EventDao {
         return appDatabase.eventDao()
+    }
+
+    @Provides
+    fun provideEventGameDao(appDatabase: EventDatabase): EventGameDao {
+        return appDatabase.eventGameDao()
     }
 }

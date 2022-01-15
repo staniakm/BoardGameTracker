@@ -19,6 +19,4 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
     suspend fun updateStatus(eventId: Int, status: EventStatus) {
         eventDao.updateStatus(eventId, status)
     }
-
-
 }

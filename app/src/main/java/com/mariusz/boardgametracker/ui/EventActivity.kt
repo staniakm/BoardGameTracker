@@ -182,7 +182,9 @@ class EventActivity : AppCompatActivity() {
                 binding.startEvent.visibility = View.GONE
             }
         }
-        gameAdapter.submitList(gameViewModelModel.getEventGames(event.id!!))
+        gameViewModelModel.getEventGames(event.id!!).observe(this) {
+            gameAdapter.submitList(it)
+        }
         eventViewModel.getAllAttendeesIds(event.id!!).let {
             attendeeAdapter.submitList(attendeeViewModelModel.getAttendees(it))
         }

@@ -31,7 +31,7 @@ object InMemoryEventGameTable {
 
     fun getId() = idCounter.incrementAndGet()
     fun addGameEvent(event: EventGame) {
-        database[event.id] = event
+        database[event.id!!] = event
     }
 
     fun getAllGames(eventId: Int): List<EventGame> {

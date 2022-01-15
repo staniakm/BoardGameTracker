@@ -26,7 +26,6 @@ interface EventDao {
 
     @Query("update event set eventStatus = :status where id = :eventId")
     suspend fun updateStatus(eventId: Int, status: EventStatus)
-
 }
 
 
@@ -34,4 +33,19 @@ enum class EventStatus(val iconId: Int) {
     SCHEDULED(R.drawable.event_scheduled), OPEN(R.drawable.event_open), CLOSED(R.drawable.event_finished)
 }
 
-data class EventGame(val id: Int, val eventId: Int, val gameId: Int)
+@Entity
+data class EventGame(
+    val eventId: Int,
+    val gameId: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int? = null
+)
+
+@Dao
+interface EventGameDao {
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun createEventGame(eventGame: EventGame)
+
+    @Query("select * from eventgame where eventId = :eventId")
+    fun getAllEventGames(eventId: Int): Flow<List<EventGame>>
+
+}

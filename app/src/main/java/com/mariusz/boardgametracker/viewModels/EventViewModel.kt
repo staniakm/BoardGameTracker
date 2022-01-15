@@ -6,8 +6,8 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mariusz.boardgametracker.database.InMemoryEventAttendeeTable
 import com.mariusz.boardgametracker.database.InMemoryEventGameTable
-import com.mariusz.boardgametracker.database.InMemoryEventTable
 import com.mariusz.boardgametracker.domain.*
+import com.mariusz.boardgametracker.repository.EventGameRepository
 import com.mariusz.boardgametracker.repository.EventRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EventViewModel @Inject constructor(
     private val eventRepository: EventRepository,
-    private val eventGameTable: InMemoryEventGameTable,
+    private val eventGameRepository: EventGameRepository,
     private val eventAttendeeTable: InMemoryEventAttendeeTable
 ) : ViewModel() {
 
@@ -53,8 +53,8 @@ class EventViewModel @Inject constructor(
         eventRepository.updateStatus(eventId, EventStatus.CLOSED)
     }
 
-    fun addEventGame(eventId: Int, boardgameInt: Int) {
-        eventGameTable.addGameEvent(EventGame(eventGameTable.getId(), eventId, boardgameInt))
+    fun addEventGame(eventId: Int, boardgameInt: Int) = viewModelScope.launch {
+        eventGameRepository.addGameEvent(EventGame(eventId, boardgameInt))
     }
 
     fun addEventAttendee(id: Int, selectedAttendee: Attendee) {
