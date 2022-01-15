@@ -15,7 +15,9 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-
+ext {
+    roomVersion = '2.4.1'
+}
 allprojects {
     repositories {
         google()

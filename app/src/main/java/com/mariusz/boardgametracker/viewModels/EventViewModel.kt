@@ -1,27 +1,34 @@
 package com.mariusz.boardgametracker.viewModels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.mariusz.boardgametracker.database.InMemoryEventAttendeeTable
 import com.mariusz.boardgametracker.database.InMemoryEventGameTable
 import com.mariusz.boardgametracker.database.InMemoryEventTable
 import com.mariusz.boardgametracker.domain.*
+import com.mariusz.boardgametracker.repository.EventRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class EventViewModel @Inject constructor(
-    private val eventTable: InMemoryEventTable,
+    private val eventRepository: EventRepository,
     private val eventGameTable: InMemoryEventGameTable,
     private val eventAttendeeTable: InMemoryEventAttendeeTable
 ) : ViewModel() {
-    fun storeEvent(event: String, eventDate: LocalDate): Event {
-        return getEventStatus(eventDate).let { status ->
-            Event(eventTable.getId(), event, eventDate, status).let {
-                eventTable.addEvent(it)
-                it
-            }
 
+
+    fun storeEvent(name: String, eventDate: LocalDate) {
+        return getEventStatus(eventDate).let { status ->
+            Event(name = name, date = eventDate, eventStatus = status).let {
+                viewModelScope.launch {
+                    eventRepository.addEvent(it)
+                }
+            }
         }
     }
 
@@ -34,13 +41,17 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    fun getEvents(): List<Event> {
-        return eventTable.getEvents().sortedBy { it.date }
+    fun getEvents(): LiveData<List<Event>> {
+        return eventRepository.getAllEvents().asLiveData()
     }
 
-    fun startEvent(eventId: Int) = eventTable.changeStatus(eventId, EventStatus.OPEN)
+    fun startEvent(eventId: Int) = viewModelScope.launch {
+        eventRepository.updateStatus(eventId, EventStatus.OPEN)
+    }
 
-    fun finishEvent(eventId: Int) = eventTable.changeStatus(eventId, EventStatus.CLOSED)
+    fun finishEvent(eventId: Int) = viewModelScope.launch {
+        eventRepository.updateStatus(eventId, EventStatus.CLOSED)
+    }
 
     fun addEventGame(eventId: Int, boardgameInt: Int) {
         eventGameTable.addGameEvent(EventGame(eventGameTable.getId(), eventId, boardgameInt))

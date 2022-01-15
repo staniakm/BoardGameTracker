@@ -58,12 +58,14 @@ class EventActivity : AppCompatActivity() {
         }
 
         binding.startEvent.setOnClickListener {
-            event = eventViewModel.startEvent(event.id)
+            eventViewModel.startEvent(event.id!!)
+            event = event.copy(eventStatus = EventStatus.OPEN)
             loadData()
         }
 
         binding.finishEvent.setOnClickListener {
-            event = eventViewModel.finishEvent(event.id)
+            eventViewModel.finishEvent(event.id!!)
+            event = event.copy(eventStatus = EventStatus.CLOSED)
             loadData()
         }
 
@@ -135,7 +137,7 @@ class EventActivity : AppCompatActivity() {
 
     private fun addEventAttendee(selectedAttendee: Attendee) {
         processAttendee(selectedAttendee).let {
-            eventViewModel.addEventAttendee(event.id, it)
+            eventViewModel.addEventAttendee(event.id!!, it)
             attendeeAdapter.addAttendee(it)
         }
     }
@@ -149,7 +151,7 @@ class EventActivity : AppCompatActivity() {
     }
 
     private fun addNewEventGame(game: BoardGame) {
-        eventViewModel.addEventGame(event.id, game.id)
+        eventViewModel.addEventGame(event.id!!, game.id)
         gameAdapter.addNewGame(game)
     }
 
@@ -180,8 +182,8 @@ class EventActivity : AppCompatActivity() {
                 binding.startEvent.visibility = View.GONE
             }
         }
-        gameAdapter.submitList(gameViewModelModel.getEventGames(event.id))
-        eventViewModel.getAllAttendeesIds(event.id).let {
+        gameAdapter.submitList(gameViewModelModel.getEventGames(event.id!!))
+        eventViewModel.getAllAttendeesIds(event.id!!).let {
             attendeeAdapter.submitList(attendeeViewModelModel.getAttendees(it))
         }
 

@@ -54,10 +54,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
-        eventViewModel.getEvents().let {
+        eventViewModel.getEvents().observe(this) {
             eventAdapter.submitList(it)
         }
-
     }
 
     private val onItemClick: (event: Event) -> Unit = { event: Event ->
@@ -94,12 +93,7 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "createNewEvent: $eventName $eventDate")
         //save new event in database
         eventViewModel.storeEvent(eventName, eventDate)
-            .let {
-                eventAdapter.addNewEvent(it)
-                val intent = Intent(this, EventActivity::class.java)
-                intent.putExtra("event", it)
-                startActivity(intent)
-            }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
