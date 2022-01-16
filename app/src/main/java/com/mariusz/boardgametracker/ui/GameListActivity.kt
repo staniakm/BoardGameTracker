@@ -44,7 +44,7 @@ class GameListActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
-        gamesViewModelModel.getAllGames().let {
+        gamesViewModelModel.getAllGames().observe(this) {
             gamesAdapter.submitList(it)
         }
     }
@@ -78,9 +78,8 @@ class GameListActivity : AppCompatActivity() {
     }
 
     private fun createNewGame(gameTitle: String, gameStatus: BoardGameStatus) {
-        gamesViewModelModel.addGame(gameTitle, gameStatus)
-            .let {
-                gamesAdapter.addNewGame(it)
-            }
+        gamesViewModelModel.addGame(gameTitle, gameStatus).observe(this) {
+            gamesAdapter.addNewGame(it)
+        }
     }
 }

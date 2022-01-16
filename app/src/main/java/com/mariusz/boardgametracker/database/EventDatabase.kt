@@ -7,7 +7,7 @@ import com.mariusz.boardgametracker.converters.LocalDateConverter
 import com.mariusz.boardgametracker.domain.*
 
 @Database(
-    entities = [Event::class, EventGame::class, Attendee::class],
+    entities = [Event::class, EventGame::class, Attendee::class, BoardGame::class],
     version = 1,
     exportSchema = false
 )
@@ -17,4 +17,5 @@ abstract class EventDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
     abstract fun eventGameDao(): EventGameDao
     abstract fun attendeeDao(): AttendeeDao
+    abstract fun getBoardGameDao(): BoardGameDao
 }

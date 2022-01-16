@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mariusz.boardgametracker.database.InMemoryEventAttendeeTable
-import com.mariusz.boardgametracker.database.InMemoryEventGameTable
-import com.mariusz.boardgametracker.domain.*
+import com.mariusz.boardgametracker.domain.Event
+import com.mariusz.boardgametracker.domain.EventAttendee
+import com.mariusz.boardgametracker.domain.EventGame
+import com.mariusz.boardgametracker.domain.EventStatus
 import com.mariusz.boardgametracker.repository.EventGameRepository
 import com.mariusz.boardgametracker.repository.EventRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

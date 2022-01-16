@@ -86,13 +86,14 @@ class EventActivity : AppCompatActivity() {
 
     @SuppressLint("ResourceType")
     private fun newGameDialog() {
-        val games = gameViewModelModel.getAllGames()
         val spinner = Spinner(this)
-        spinner.adapter = ArrayAdapter(
-            this,
-            R.layout.simple_spinner_dropdown_item,
-            games
-        )
+        gameViewModelModel.getAllGames().observe(this) {
+            spinner.adapter = ArrayAdapter(
+                this,
+                R.layout.simple_spinner_dropdown_item,
+                it
+            )
+        }
         val alert: AlertDialog.Builder = AlertDialog.Builder(this)
         alert.setTitle("Select game")
             .setView(spinner)
@@ -158,7 +159,7 @@ class EventActivity : AppCompatActivity() {
     }
 
     private fun addNewEventGame(game: BoardGame) {
-        eventViewModel.addEventGame(event.id!!, game.id)
+        eventViewModel.addEventGame(event.id!!, game.id!!)
         gameAdapter.addNewGame(game)
     }
 
@@ -190,7 +191,7 @@ class EventActivity : AppCompatActivity() {
             }
         }
         gameViewModelModel.getEventGames(event.id!!).observe(this) {
-            gameAdapter.submitList(it)
+            gameAdapter.submitList(it ?: listOf())
         }
         eventViewModel.getAllAttendeesIds(event.id!!).let {
             attendeeViewModelModel.getAttendees(it).observe(this) {
