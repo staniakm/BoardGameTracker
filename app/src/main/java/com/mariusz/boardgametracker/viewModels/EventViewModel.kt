@@ -57,8 +57,8 @@ class EventViewModel @Inject constructor(
         eventGameRepository.addGameEvent(EventGame(eventId, boardgameInt))
     }
 
-    fun addEventAttendee(id: Int, selectedAttendee: Attendee) {
-        eventAttendeeTable.addEventAttendee(EventAttendee(id, selectedAttendee.id))
+    fun addEventAttendee(id: Int, selectedAttendeeId: Int) {
+        eventAttendeeTable.addEventAttendee(EventAttendee(id, selectedAttendeeId))
     }
 
     fun getAllAttendeesIds(eventId: Int): List<Int> {

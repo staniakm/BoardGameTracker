@@ -110,10 +110,13 @@ class EventActivity : AppCompatActivity() {
     @SuppressLint("ResourceType")
     private fun newEventPersonDialog() {
         var selectedAttendee: Attendee? = null
-        val attendeeList = attendeeViewModelModel.getAllAttendee()
         val attendees = ArrayAdapter<Attendee>(this, R.layout.simple_spinner_dropdown_item)
         attendees.notifyDataSetChanged()
-        attendees.addAll(attendeeList)
+
+        attendeeViewModelModel.getAllAttendee().observe(this) {
+            attendees.addAll(it)
+        }
+
         val tv = AutoCompleteTextView(this)
 
         tv.setAdapter(attendees)
@@ -127,7 +130,7 @@ class EventActivity : AppCompatActivity() {
             .setView(tv)
             .setPositiveButton("OK") { _, _ ->
                 if (selectedAttendee == null) {
-                    selectedAttendee = Attendee(-1, tv.text.toString())
+                    selectedAttendee = Attendee(tv.text.toString())
                 }
                 addEventAttendee(selectedAttendee!!)
             }
@@ -136,17 +139,21 @@ class EventActivity : AppCompatActivity() {
     }
 
     private fun addEventAttendee(selectedAttendee: Attendee) {
-        processAttendee(selectedAttendee).let {
-            eventViewModel.addEventAttendee(event.id!!, it)
-            attendeeAdapter.addAttendee(it)
+        if (selectedAttendee.id != null) {
+            processEventAttendee(selectedAttendee)
+        } else {
+            processAttendee(selectedAttendee)
         }
     }
 
-    private fun processAttendee(selectedAttendee: Attendee): Attendee {
-        return if (selectedAttendee.id == -1) {
-            attendeeViewModelModel.createNewAttendee(selectedAttendee)
-        } else {
-            selectedAttendee
+    private fun processEventAttendee(selectedAttendee: Attendee) {
+        eventViewModel.addEventAttendee(event.id!!, selectedAttendee.id!!)
+        attendeeAdapter.addAttendee(selectedAttendee)
+    }
+
+    private fun processAttendee(selectedAttendee: Attendee) {
+        attendeeViewModelModel.createNewAttendee(selectedAttendee).observe(this) {
+            processEventAttendee(selectedAttendee.copy(id = it.toInt()))
         }
     }
 
@@ -186,7 +193,9 @@ class EventActivity : AppCompatActivity() {
             gameAdapter.submitList(it)
         }
         eventViewModel.getAllAttendeesIds(event.id!!).let {
-            attendeeAdapter.submitList(attendeeViewModelModel.getAttendees(it))
+            attendeeViewModelModel.getAttendees(it).observe(this) {
+                attendeeAdapter.submitList(it)
+            }
         }
 
     }

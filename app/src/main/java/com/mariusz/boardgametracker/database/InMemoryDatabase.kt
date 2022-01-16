@@ -75,24 +75,3 @@ object InMemoryGamesTable {
         return database.filterKeys { keys.contains(it) }.values.toList()
     }
 }
-
-object InMemoryAttendeeTable {
-    private val idCounter: AtomicInteger = AtomicInteger(1)
-    private val database: MutableMap<Int, Attendee> = mutableMapOf()
-
-    fun getId() = idCounter.incrementAndGet()
-    fun addAttendee(attendee: Attendee): Attendee {
-        return attendee.let {
-            database[attendee.id] = attendee
-            attendee
-        }
-    }
-
-    fun getAttendees(): List<Attendee> {
-        return database.values.toList()
-    }
-
-    fun getSelectedAttendees(attendeeIds: List<Int>): List<Attendee> {
-        return database.filterKeys { attendeeIds.contains(it) }.values.toList()
-    }
-}

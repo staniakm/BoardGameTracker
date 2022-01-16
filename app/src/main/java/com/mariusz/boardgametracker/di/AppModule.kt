@@ -3,6 +3,7 @@ package com.mariusz.boardgametracker.di
 import android.content.Context
 import androidx.room.Room
 import com.mariusz.boardgametracker.database.*
+import com.mariusz.boardgametracker.domain.AttendeeDao
 import com.mariusz.boardgametracker.domain.EventDao
 import com.mariusz.boardgametracker.domain.EventGameDao
 import dagger.Module
@@ -26,10 +27,6 @@ object AppModule {
     @Singleton
     @Provides
     fun provideEventGameTable() = InMemoryEventGameTable
-
-    @Singleton
-    @Provides
-    fun provideAttendeeTable() = InMemoryAttendeeTable
 
     @Singleton
     @Provides
@@ -59,5 +56,10 @@ class DatabaseModule {
     @Provides
     fun provideEventGameDao(appDatabase: EventDatabase): EventGameDao {
         return appDatabase.eventGameDao()
+    }
+
+    @Provides
+    fun provideAttendeeDao(appDatabase: EventDatabase): AttendeeDao {
+        return appDatabase.attendeeDao()
     }
 }
