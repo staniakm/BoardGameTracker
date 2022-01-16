@@ -26,5 +26,19 @@ interface AttendeeDao {
 
 }
 
-data class EventAttendee(val eventId: Int, val attendeeId: Int)
+@Entity
+data class EventAttendee(
+    val eventId: Int,
+    val attendeeId: Int,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null
+)
 
+@Dao
+interface EventAttendeeDao {
+    @Insert
+    suspend fun addEventAttendee(eventAttendee: EventAttendee)
+
+    @Query("select * from EventAttendee where eventId = :eventId")
+    fun getAllEventAttendeeIds(eventId: Int): Flow<List<EventAttendee>>
+
+}

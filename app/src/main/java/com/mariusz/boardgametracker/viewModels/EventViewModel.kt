@@ -4,14 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.mariusz.boardgametracker.database.InMemoryEventAttendeeTable
 import com.mariusz.boardgametracker.domain.Event
 import com.mariusz.boardgametracker.domain.EventAttendee
 import com.mariusz.boardgametracker.domain.EventGame
 import com.mariusz.boardgametracker.domain.EventStatus
+import com.mariusz.boardgametracker.repository.EventAttendeeRepository
 import com.mariusz.boardgametracker.repository.EventGameRepository
 import com.mariusz.boardgametracker.repository.EventRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class EventViewModel @Inject constructor(
     private val eventRepository: EventRepository,
     private val eventGameRepository: EventGameRepository,
-    private val eventAttendeeTable: InMemoryEventAttendeeTable
+    private val eventAttendeeRepository: EventAttendeeRepository
 ) : ViewModel() {
 
 
@@ -59,11 +60,11 @@ class EventViewModel @Inject constructor(
         eventGameRepository.addGameEvent(EventGame(eventId, boardgameInt))
     }
 
-    fun addEventAttendee(id: Int, selectedAttendeeId: Int) {
-        eventAttendeeTable.addEventAttendee(EventAttendee(id, selectedAttendeeId))
+    fun addEventAttendee(eventId: Int, selectedAttendeeId: Int) = viewModelScope.launch {
+        eventAttendeeRepository.addEventAttendee(EventAttendee(eventId, selectedAttendeeId))
     }
 
-    fun getAllAttendeesIds(eventId: Int): List<Int> {
-        return eventAttendeeTable.getAllAttendeeIdForEvent(eventId).map { it.attendeeId }
+    fun getAllAttendeesIds(eventId: Int): LiveData<List<EventAttendee>> {
+        return eventAttendeeRepository.getAllAttendeeIdForEvent(eventId).asLiveData()
     }
 }
