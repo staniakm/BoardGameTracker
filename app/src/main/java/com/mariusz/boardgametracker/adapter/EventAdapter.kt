@@ -68,5 +68,14 @@ class EventAdapter(val onItemClick: (Event) -> Unit) :
         }
     }
 
+    fun removeAt(adapterPosition: Int): Event? {
+        val item = differ.currentList[adapterPosition]
+        differ.currentList.filterIndexed { index, _ -> index != adapterPosition }
+            .let {
+                differ.submitList(it)
+            }
+        return item
+    }
+
 
 }

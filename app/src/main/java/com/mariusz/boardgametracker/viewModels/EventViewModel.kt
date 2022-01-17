@@ -67,4 +67,10 @@ class EventViewModel @Inject constructor(
     fun getAllAttendeesIds(eventId: Int): LiveData<List<EventAttendee>> {
         return eventAttendeeRepository.getAllAttendeeIdForEvent(eventId).asLiveData()
     }
+
+    fun deleteEvent(id: Int?) = viewModelScope.launch {
+        id?.let {
+            eventRepository.deleteEvent(it)
+        }
+    }
 }

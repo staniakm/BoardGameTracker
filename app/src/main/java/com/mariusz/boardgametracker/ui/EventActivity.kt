@@ -184,7 +184,10 @@ class EventActivity : AppCompatActivity() {
         binding.eventName.text = event.name
         when (event.eventStatus) {
             EventStatus.SCHEDULED -> binding.finishEvent.visibility = View.GONE
-            EventStatus.OPEN -> binding.startEvent.visibility = View.GONE
+            EventStatus.OPEN -> {
+                binding.startEvent.visibility = View.GONE
+                binding.finishEvent.visibility = View.VISIBLE
+            }
             EventStatus.CLOSED -> {
                 binding.finishEvent.visibility = View.GONE
                 binding.startEvent.visibility = View.GONE

@@ -16,6 +16,7 @@ import com.mariusz.boardgametracker.adapter.EventAdapter
 import com.mariusz.boardgametracker.databinding.ActivityMainBinding
 import com.mariusz.boardgametracker.databinding.AddEventViewBinding
 import com.mariusz.boardgametracker.domain.Event
+import com.mariusz.boardgametracker.functions.removeRecycleViewItemOnSwipe
 import com.mariusz.boardgametracker.functions.toLocalDate
 import com.mariusz.boardgametracker.viewModels.EventViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,10 +43,18 @@ class MainActivity : AppCompatActivity() {
         binding.rvEvent.adapter = eventAdapter
         setSupportActionBar(binding.toolbar)
 
+        removeRecycleViewItemOnSwipe(binding.rvEvent) { pos -> removeItem(pos) }
+
         binding.fab.setOnClickListener {
             newEventDialog()
         }
         loadData()
+    }
+
+    private fun removeItem(absoluteAdapterPosition: Int) {
+        eventAdapter.removeAt(absoluteAdapterPosition)?.let {
+            eventViewModel.deleteEvent(it.id)
+        }
     }
 
     override fun onResume() {
