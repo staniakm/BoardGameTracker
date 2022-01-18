@@ -54,19 +54,16 @@ class EventActivity : AppCompatActivity() {
 
         intent.extras?.let { extras ->
             event = extras.getSerializable("event") as Event
+            binding.eventName.text = event.name
             loadData()
         }
 
-        binding.startEvent.setOnClickListener {
-            eventViewModel.startEvent(event.id!!)
-            event = event.copy(eventStatus = EventStatus.OPEN)
-            loadData()
-        }
-
-        binding.finishEvent.setOnClickListener {
-            eventViewModel.finishEvent(event.id!!)
-            event = event.copy(eventStatus = EventStatus.CLOSED)
-            loadData()
+        binding.processEvent.setOnClickListener {
+            when (event.eventStatus) {
+                EventStatus.SCHEDULED -> startEvent()
+                EventStatus.OPEN -> closeEvent()
+                EventStatus.CLOSED -> binding.processEvent.visibility == View.GONE
+            }
         }
 
         binding.participants.setOnClickListener {
@@ -82,6 +79,19 @@ class EventActivity : AppCompatActivity() {
                 newGameDialog()
             }
         }
+    }
+
+    private fun closeEvent() {
+        binding.processEvent.visibility == View.GONE
+        eventViewModel.finishEvent(event.id!!)
+        event = event.copy(eventStatus = EventStatus.CLOSED)
+        loadData()
+    }
+
+    private fun startEvent() {
+        eventViewModel.startEvent(event.id!!)
+        event = event.copy(eventStatus = EventStatus.OPEN)
+        loadData()
     }
 
     @SuppressLint("ResourceType")
@@ -183,15 +193,25 @@ class EventActivity : AppCompatActivity() {
     private fun loadData() {
         binding.eventName.text = event.name
         when (event.eventStatus) {
-            EventStatus.SCHEDULED -> binding.finishEvent.visibility = View.GONE
+            EventStatus.SCHEDULED -> {
+                binding.processEvent.visibility = View.VISIBLE
+                binding.processEvent.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_media_play,
+                    0,
+                    R.drawable.ic_media_play,
+                    0
+                )
+            }
             EventStatus.OPEN -> {
-                binding.startEvent.visibility = View.GONE
-                binding.finishEvent.visibility = View.VISIBLE
+                binding.processEvent.text = "Zakończ"
+                binding.processEvent.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_media_pause,
+                    0,
+                    R.drawable.ic_media_pause,
+                    0
+                )
             }
-            EventStatus.CLOSED -> {
-                binding.finishEvent.visibility = View.GONE
-                binding.startEvent.visibility = View.GONE
-            }
+            EventStatus.CLOSED -> binding.processEvent.visibility = View.GONE
         }
         gameViewModel.getEventGames(event.id!!).observe(this) {
             gameAdapter.submitList(it ?: listOf())
