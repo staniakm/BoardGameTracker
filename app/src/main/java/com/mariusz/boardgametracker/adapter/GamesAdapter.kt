@@ -60,4 +60,8 @@ class GamesAdapter(private val onItemClick: (game: BoardGame) -> Unit) :
             submitList(it.toList())
         }
     }
+
+    fun getAllGames(): List<BoardGame> {
+        return differ.currentList.toList()
+    }
 }

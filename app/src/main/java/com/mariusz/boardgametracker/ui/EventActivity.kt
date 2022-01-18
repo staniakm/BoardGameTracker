@@ -79,6 +79,10 @@ class EventActivity : AppCompatActivity() {
                 newGameDialog()
             }
         }
+
+        binding.createSession.setOnClickListener {
+            selectGameDialog()
+        }
     }
 
     private fun closeEvent() {
@@ -92,6 +96,33 @@ class EventActivity : AppCompatActivity() {
         eventViewModel.startEvent(event.id!!)
         event = event.copy(eventStatus = EventStatus.OPEN)
         loadData()
+    }
+
+    @SuppressLint("ResourceType")
+    private fun selectGameDialog() {
+        val spinner = Spinner(this)
+        val games = gameAdapter.getAllGames()
+        spinner.adapter = ArrayAdapter(
+            this,
+            R.layout.simple_spinner_dropdown_item,
+            games
+        )
+        val alert: AlertDialog.Builder = AlertDialog.Builder(this)
+        alert.setTitle("Select game session")
+            .setView(spinner)
+            .setPositiveButton("OK") { _, _ ->
+                Log.i(TAG, "newGameDialog: ${spinner.selectedItem as BoardGame}")
+
+                (spinner.selectedItem as BoardGame)?.let {
+                    startNewGameSession(it)
+                }
+            }
+            .setNegativeButton("Cancel") { _, _ -> }
+        alert.show()
+    }
+
+    private fun startNewGameSession(it: BoardGame) {
+        Log.i(TAG, "startNewGameSession: $it")
     }
 
     @SuppressLint("ResourceType")
@@ -177,6 +208,7 @@ class EventActivity : AppCompatActivity() {
         if (button.visibility == View.GONE) {
             button.visibility = View.VISIBLE
             rvToShow.visibility = View.GONE
+            binding.fab.visibility = View.GONE
         } else {
             button.visibility = View.GONE
             rvToShow.visibility = View.VISIBLE
@@ -194,6 +226,7 @@ class EventActivity : AppCompatActivity() {
         binding.eventName.text = event.name
         when (event.eventStatus) {
             EventStatus.SCHEDULED -> {
+                binding.createSession.visibility = View.GONE
                 binding.processEvent.visibility = View.VISIBLE
                 binding.processEvent.setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.ic_media_play,
@@ -203,6 +236,7 @@ class EventActivity : AppCompatActivity() {
                 )
             }
             EventStatus.OPEN -> {
+                binding.createSession.visibility = View.VISIBLE
                 binding.processEvent.text = "Zakończ"
                 binding.processEvent.setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.ic_media_pause,
@@ -211,7 +245,10 @@ class EventActivity : AppCompatActivity() {
                     0
                 )
             }
-            EventStatus.CLOSED -> binding.processEvent.visibility = View.GONE
+            EventStatus.CLOSED -> {
+                binding.processEvent.visibility = View.GONE
+                binding.createSession.visibility = View.GONE
+            }
         }
         gameViewModel.getEventGames(event.id!!).observe(this) {
             gameAdapter.submitList(it ?: listOf())
