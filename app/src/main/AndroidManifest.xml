@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BoardGameTracker">
         <activity
+            android:name=".ui.GameSessionActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.GameListActivity"
             android:exported="false" />
         <activity

@@ -3,6 +3,7 @@ package com.mariusz.boardgametracker.domain
 import androidx.room.*
 import com.mariusz.boardgametracker.R
 import kotlinx.coroutines.flow.Flow
+import java.io.Serializable
 
 @Entity
 data class BoardGame(
@@ -10,7 +11,7 @@ data class BoardGame(
     val gameStatus: BoardGameStatus = BoardGameStatus.HOME,
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null
-) {
+) : Serializable {
     override fun toString(): String {
         return name
     }

@@ -3,6 +3,7 @@ package com.mariusz.boardgametracker.ui
 import android.R
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -122,7 +123,13 @@ class EventActivity : AppCompatActivity() {
     }
 
     private fun startNewGameSession(it: BoardGame) {
-        Log.i(TAG, "startNewGameSession: $it")
+        Intent(this, GameSessionActivity::class.java)
+            .apply {
+                putExtra("event", event)
+                putExtra("game", it)
+            }.let {
+                startActivity(it)
+            }
     }
 
     @SuppressLint("ResourceType")
