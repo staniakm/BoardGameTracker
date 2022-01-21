@@ -21,8 +21,7 @@ class GameSessionActivity : AppCompatActivity() {
         intent.extras?.let { extras ->
             val boardGame = extras.getSerializable("game") as BoardGame
             val event = extras.getSerializable("event") as Event
-
-            Log.i(TAG, "game: $boardGame\nevent: $event")
+            binding.gameName.text = boardGame.name
         }
 
     }
