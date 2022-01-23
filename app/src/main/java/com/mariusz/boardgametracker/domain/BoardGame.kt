@@ -32,5 +32,28 @@ interface BoardGameDao {
 
     @Query("select * from BoardGame where id in (:gameIds)")
     fun getSelectedGames(gameIds: List<Int>): Flow<List<BoardGame>>
+}
 
+@Entity
+data class GameSession(
+    val eventId: Int,
+    val gameId: Int,
+    val sessionStatus: SessionStatus = SessionStatus.OPENED,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = null
+)
+
+@Dao
+interface GameSessionDao {
+
+    @Query("select * from GameSession where eventId=:eventId and gameId=:gameId and sessionStatus=:sessionStatus")
+    fun getGameActiveSession(eventId: Int, gameId: Int, sessionStatus: SessionStatus): GameSession?
+
+    @Insert
+    fun createGameSession(gameSession: GameSession)
+
+}
+
+enum class SessionStatus {
+    OPENED, CLOSED
 }
