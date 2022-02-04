@@ -52,9 +52,9 @@ class AttendeeAdapter(private val onItemClick: (game: Attendee) -> Unit) :
         return differ.currentList.size
     }
 
-    fun addAttendee(game: Attendee) {
+    fun addAttendee(attendee: Attendee) {
         differ.currentList.toMutableList().apply {
-            add(game)
+            add(attendee)
         }.let {
             submitList(it.toList())
         }

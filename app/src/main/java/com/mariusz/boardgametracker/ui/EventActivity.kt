@@ -260,11 +260,12 @@ class EventActivity : AppCompatActivity() {
         gameViewModel.getEventGames(event.id!!).observe(this) {
             gameAdapter.submitList(it ?: listOf())
         }
-        eventViewModel.getAllAttendeesIds(event.id!!).observe(this) { attendees ->
-            attendeeViewModelModel.getAttendees(attendees.map { it.attendeeId }).observe(this) {
-                attendeeAdapter.submitList(it)
+        eventViewModel.getAllAttendeesIds(event.id!!)
+            .observe(this) { attendees ->
+                attendeeViewModelModel.getAttendees(attendees.map { it.attendeeId }).observe(this) {
+                    attendeeAdapter.submitList(it?: listOf())
+                }
             }
-        }
 
     }
 }
