@@ -33,7 +33,7 @@ class GameSessionActivity : AppCompatActivity() {
             val boardGame = extras.getSerializable("game") as BoardGame
             val event = extras.getSerializable("event") as Event
             binding.gameName.text = boardGame.name
-            gameSessionViewModel.getGameSession(event.id!!, boardGame.id!!)
+            gameSessionViewModel.getRunningGameSession(event.id!!, boardGame.id!!)
                 .observe(this) {
                     it ?: gameSessionViewModel.createGameSession(event.id, boardGame.id)
                 }

@@ -20,7 +20,7 @@ class GameSessionViewModel @Inject constructor(
 
     }
 
-    fun getGameSession(eventId: Int, gameId: Int): LiveData<GameSession?> {
+    fun getRunningGameSession(eventId: Int, gameId: Int): LiveData<GameSession?> {
         return gameSessionRepository.getActiveGameSession(eventId, gameId).asLiveData()
     }
 
