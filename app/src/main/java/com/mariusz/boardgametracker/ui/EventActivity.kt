@@ -81,6 +81,13 @@ class EventActivity : AppCompatActivity() {
             }
         }
 
+        binding.sessions.setOnClickListener {
+            showHide(binding.participants, binding.rvGames)
+            setFabEvent {
+                newGameDialog()
+            }
+        }
+
         binding.createSession.setOnClickListener {
             selectGameDialog()
         }
