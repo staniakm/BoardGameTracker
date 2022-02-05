@@ -9,11 +9,11 @@ import javax.inject.Inject
 class GameSessionRepository @Inject constructor(private val gamesSessionDao: GameSessionDao) {
 
 
-    fun getActiveGameSession(eventId: Int, gameId: Int): Flow<GameSession> {
+    fun getActiveGameSession(eventId: Int, gameId: Int): Flow<GameSession?> {
         return gamesSessionDao.getGameActiveSession(eventId, gameId, SessionStatus.OPENED)
     }
 
-    fun createSession(eventId: Int, gameId: Int, status: SessionStatus) {
+    suspend fun createSession(eventId: Int, gameId: Int, status: SessionStatus) {
         GameSession(eventId, gameId, SessionStatus.OPENED).let {
             gamesSessionDao.createGameSession(it)
         }

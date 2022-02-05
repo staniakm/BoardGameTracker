@@ -1,7 +1,6 @@
 package com.mariusz.boardgametracker.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,12 +33,10 @@ class GameSessionActivity : AppCompatActivity() {
             val boardGame = extras.getSerializable("game") as BoardGame
             val event = extras.getSerializable("event") as Event
             binding.gameName.text = boardGame.name
-            gameSessionViewModel.getGameSession(event.id!!, boardGame.id!!).observe(this) {
-                Log.i(TAG, "onCreate: Game session exists")
-            } ?: {
-                Log.i(TAG, "onCreate: Game session not exists")
-                gameSessionViewModel.createGameSession(event.id, boardGame.id)
-            }
+            gameSessionViewModel.getGameSession(event.id!!, boardGame.id!!)
+                .observe(this) {
+                    it ?: gameSessionViewModel.createGameSession(event.id, boardGame.id)
+                }
         }
 
     }
