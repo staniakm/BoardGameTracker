@@ -34,7 +34,7 @@ class GameSessionActivity : AppCompatActivity() {
             val boardGame = extras.getSerializable("game") as BoardGame
             val event = extras.getSerializable("event") as Event
             binding.gameName.text = boardGame.name
-            gameSessionViewModel.getGameSession(event.id!!, boardGame.id!!)?.let {
+            gameSessionViewModel.getGameSession(event.id!!, boardGame.id!!).observe(this) {
                 Log.i(TAG, "onCreate: Game session exists")
             } ?: {
                 Log.i(TAG, "onCreate: Game session not exists")
