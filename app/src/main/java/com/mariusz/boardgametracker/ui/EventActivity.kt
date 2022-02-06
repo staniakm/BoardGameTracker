@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mariusz.boardgametracker.adapter.AttendeeAdapter
 import com.mariusz.boardgametracker.adapter.GamesAdapter
 import com.mariusz.boardgametracker.databinding.ActivityEventBinding
@@ -85,27 +86,32 @@ class EventActivity : AppCompatActivity() {
             }
         }
 
-        binding.particpiantsView.participants.setOnClickListener {
-            showHide(binding.menuView)
-            setFabEvent {
+        with(binding.particpiantsView) {
+            participants.setOnClickListener {
+                showHide(binding.menuView)
+            }
+            setFabEvent(fab) {
                 newEventPersonDialog()
             }
         }
 
-        binding.gamesView.games.setOnClickListener {
-            showHide(binding.menuView)
-            setFabEvent {
+        with(binding.gamesView) {
+            games.setOnClickListener {
+                showHide(binding.menuView)
+            }
+            setFabEvent(fab) {
                 newGameDialog()
             }
         }
 
-        binding.sessionView.sessions.setOnClickListener {
-            showHide(binding.menuView)
-            setFabEvent {
+        with(binding.sessionView) {
+            sessions.setOnClickListener {
+                showHide(binding.menuView)
+            }
+            setFabEvent(fab) {
                 newGameDialog()
             }
         }
-
         binding.createSession.setOnClickListener {
             selectGameDialog()
         }
@@ -241,8 +247,8 @@ class EventActivity : AppCompatActivity() {
         view.root.visibility = View.VISIBLE
     }
 
-    private fun setFabEvent(onClick: () -> Unit) {
-        binding.fab.setOnClickListener {
+    private fun setFabEvent(fab: FloatingActionButton, onClick: () -> Unit) {
+        fab.setOnClickListener {
             onClick()
         }
     }
