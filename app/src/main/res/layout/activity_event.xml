@@ -17,65 +17,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/participants"
+    <include
+        android:id="@+id/menu"
+        layout="@layout/event_main_view"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Uczestnicy"
-        app:icon="@android:drawable/arrow_down_float"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/eventName" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvParticipants"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <include
+        layout="@layout/event_games_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/layoutSession"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/games" />
+        app:layout_constraintBottom_toTopOf="@id/layoutSession"
+        app:layout_constraintTop_toBottomOf="@id/eventName" />
 
-    <Button
-        android:id="@+id/games"
+    <include
+        layout="@layout/event_participants_view"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Gry"
-        app:icon="@android:drawable/arrow_down_float"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/participants" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvGames"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/layoutSession"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/games" />
+        app:layout_constraintBottom_toTopOf="@id/layoutSession"
+        app:layout_constraintTop_toBottomOf="@id/eventName" />
 
-    <Button
-        android:id="@+id/sessions"
+    <include
+        layout="@layout/event_sessions_view"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Sesje"
-        app:icon="@android:drawable/arrow_down_float"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/games" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSessions"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/layoutSession"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sessions" />
+        app:layout_constraintBottom_toTopOf="@id/layoutSession"
+        app:layout_constraintTop_toBottomOf="@id/eventName" />
+
     <LinearLayout
         android:id="@+id/layoutSession"
         android:layout_width="match_parent"
@@ -84,6 +56,7 @@
         app:layout_constraintBottom_toTopOf="@+id/layoutProcess"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
         <Button
             android:id="@+id/create_session"
             android:layout_width="match_parent"
@@ -91,9 +64,10 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:visibility="gone"
-            android:text="Rozpocznij sesję" />
+            android:text="Rozpocznij sesję"
+            android:visibility="gone" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/layoutProcess"
         android:layout_width="match_parent"
@@ -102,6 +76,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
         <Button
             android:id="@+id/process_event"
             android:layout_width="match_parent"
