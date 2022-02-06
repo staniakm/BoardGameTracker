@@ -9,12 +9,11 @@ import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.Button
 import android.widget.Spinner
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.mariusz.boardgametracker.adapter.AttendeeAdapter
 import com.mariusz.boardgametracker.adapter.GamesAdapter
 import com.mariusz.boardgametracker.databinding.ActivityEventBinding
@@ -40,6 +39,8 @@ class EventActivity : AppCompatActivity() {
     private lateinit var gameAdapter: GamesAdapter
     private lateinit var attendeeAdapter: AttendeeAdapter
 
+    private lateinit var views: List<ViewBinding>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEventBinding.inflate(layoutInflater)
@@ -48,11 +49,16 @@ class EventActivity : AppCompatActivity() {
         gameAdapter = GamesAdapter { Log.i(TAG, "onCreate: game clicked") }
         attendeeAdapter = AttendeeAdapter { Log.i(TAG, "onCreate: attendee clicked") }
 
-        binding.rvGames.layoutManager = LinearLayoutManager(this)
-        binding.rvGames.adapter = gameAdapter
-        binding.rvParticipants.layoutManager = LinearLayoutManager(this)
-        binding.rvParticipants.adapter = attendeeAdapter
-
+        binding.gamesView.rvGames.layoutManager = LinearLayoutManager(this)
+        binding.gamesView.rvGames.adapter = gameAdapter
+        binding.particpiantsView.rvParticipants.layoutManager = LinearLayoutManager(this)
+        binding.particpiantsView.rvParticipants.adapter = attendeeAdapter
+        views = listOf(
+            binding.menuView,
+            binding.gamesView,
+            binding.particpiantsView,
+            binding.sessionView
+        )
         intent.extras?.let { extras ->
             event = extras.getSerializable("event") as Event
             binding.eventName.text = event.name
@@ -67,22 +73,34 @@ class EventActivity : AppCompatActivity() {
             }
         }
 
-        binding.participants.setOnClickListener {
-            showHide(binding.games, binding.rvParticipants)
+        with(binding.menuView) {
+            games.setOnClickListener {
+                showHide(binding.gamesView)
+            }
+            participants.setOnClickListener {
+                showHide(binding.particpiantsView)
+            }
+            sessions.setOnClickListener {
+                showHide(binding.sessionView)
+            }
+        }
+
+        binding.particpiantsView.participants.setOnClickListener {
+            showHide(binding.menuView)
             setFabEvent {
                 newEventPersonDialog()
             }
         }
 
-        binding.games.setOnClickListener {
-            showHide(binding.participants, binding.rvGames)
+        binding.gamesView.games.setOnClickListener {
+            showHide(binding.menuView)
             setFabEvent {
                 newGameDialog()
             }
         }
 
-        binding.sessions.setOnClickListener {
-            showHide(binding.participants, binding.rvGames)
+        binding.sessionView.sessions.setOnClickListener {
+            showHide(binding.menuView)
             setFabEvent {
                 newGameDialog()
             }
@@ -218,16 +236,9 @@ class EventActivity : AppCompatActivity() {
         gameAdapter.addNewGame(game)
     }
 
-    private fun showHide(button: Button, rvToShow: RecyclerView) {
-        if (button.visibility == View.GONE) {
-            button.visibility = View.VISIBLE
-            rvToShow.visibility = View.GONE
-            binding.fab.visibility = View.GONE
-        } else {
-            button.visibility = View.GONE
-            rvToShow.visibility = View.VISIBLE
-            binding.fab.visibility = View.VISIBLE
-        }
+    private fun showHide(view: ViewBinding) {
+        views.forEach { it.root.visibility = View.GONE }
+        view.root.visibility = View.VISIBLE
     }
 
     private fun setFabEvent(onClick: () -> Unit) {
@@ -270,7 +281,7 @@ class EventActivity : AppCompatActivity() {
         eventViewModel.getAllAttendeesIds(event.id!!)
             .observe(this) { attendees ->
                 attendeeViewModelModel.getAttendees(attendees.map { it.attendeeId }).observe(this) {
-                    attendeeAdapter.submitList(it?: listOf())
+                    attendeeAdapter.submitList(it ?: listOf())
                 }
             }
 

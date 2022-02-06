@@ -18,32 +18,35 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/menu"
+        android:id="@+id/menu_view"
         layout="@layout/event_main_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/eventName" />
 
     <include
+        android:id="@+id/games_view"
         layout="@layout/event_games_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layoutSession"
         app:layout_constraintTop_toBottomOf="@id/eventName" />
 
     <include
+        android:id="@+id/particpiants_view"
         layout="@layout/event_participants_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layoutSession"
         app:layout_constraintTop_toBottomOf="@id/eventName" />
 
     <include
+        android:id="@+id/session_view"
         layout="@layout/event_sessions_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layoutSession"
         app:layout_constraintTop_toBottomOf="@id/eventName" />
