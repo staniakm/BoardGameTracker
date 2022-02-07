@@ -19,5 +19,9 @@ class GameSessionRepository @Inject constructor(private val gamesSessionDao: Gam
         }
     }
 
+    fun getAllSessions(eventId: Int):Flow<List<GameSession>> {
+        return gamesSessionDao.getAllEventSessions(eventId)
+    }
+
 
 }

@@ -47,10 +47,17 @@ data class GameSession(
 interface GameSessionDao {
 
     @Query("select * from GameSession where eventId=:eventId and gameId=:gameId and sessionStatus=:sessionStatus")
-    fun getGameActiveSession(eventId: Int, gameId: Int, sessionStatus: SessionStatus): Flow<GameSession?>
+    fun getGameActiveSession(
+        eventId: Int,
+        gameId: Int,
+        sessionStatus: SessionStatus
+    ): Flow<GameSession?>
 
     @Insert
     suspend fun createGameSession(gameSession: GameSession)
+
+    @Query("select * from GameSession where eventId=:eventId")
+    fun getAllEventSessions(eventId: Int):Flow<List<GameSession>>
 
 }
 

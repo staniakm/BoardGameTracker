@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Gry"
-        app:icon="@android:drawable/arrow_down_float"
+        app:icon="@android:drawable/arrow_up_float"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

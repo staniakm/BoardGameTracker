@@ -17,6 +17,7 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mariusz.boardgametracker.adapter.AttendeeAdapter
 import com.mariusz.boardgametracker.adapter.GamesAdapter
+import com.mariusz.boardgametracker.adapter.SessionAdapter
 import com.mariusz.boardgametracker.databinding.ActivityEventBinding
 import com.mariusz.boardgametracker.domain.Attendee
 import com.mariusz.boardgametracker.domain.BoardGame
@@ -25,6 +26,7 @@ import com.mariusz.boardgametracker.domain.EventStatus
 import com.mariusz.boardgametracker.viewModels.AttendeeGameViewModel
 import com.mariusz.boardgametracker.viewModels.BoardGameViewModel
 import com.mariusz.boardgametracker.viewModels.EventViewModel
+import com.mariusz.boardgametracker.viewModels.GameSessionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,6 +34,7 @@ class EventActivity : AppCompatActivity() {
 
     private val TAG: String = "Event activity"
     private val eventViewModel: EventViewModel by viewModels()
+    private val gameSessionViewModel: GameSessionViewModel by viewModels()
     private val gameViewModel: BoardGameViewModel by viewModels()
     private val attendeeViewModelModel: AttendeeGameViewModel by viewModels()
     private lateinit var binding: ActivityEventBinding
@@ -39,6 +42,7 @@ class EventActivity : AppCompatActivity() {
 
     private lateinit var gameAdapter: GamesAdapter
     private lateinit var attendeeAdapter: AttendeeAdapter
+    private lateinit var sessionAdapter: SessionAdapter
 
     private lateinit var views: List<ViewBinding>
 
@@ -49,11 +53,15 @@ class EventActivity : AppCompatActivity() {
 
         gameAdapter = GamesAdapter { Log.i(TAG, "onCreate: game clicked") }
         attendeeAdapter = AttendeeAdapter { Log.i(TAG, "onCreate: attendee clicked") }
+        sessionAdapter = SessionAdapter { Log.i(TAG, "onCreate: attendee clicked") }
 
         binding.gamesView.rvGames.layoutManager = LinearLayoutManager(this)
         binding.gamesView.rvGames.adapter = gameAdapter
         binding.particpiantsView.rvParticipants.layoutManager = LinearLayoutManager(this)
         binding.particpiantsView.rvParticipants.adapter = attendeeAdapter
+        binding.sessionView.rvSessions.layoutManager = LinearLayoutManager(this)
+        binding.sessionView.rvSessions.adapter = sessionAdapter
+
         views = listOf(
             binding.menuView,
             binding.gamesView,
@@ -107,9 +115,6 @@ class EventActivity : AppCompatActivity() {
         with(binding.sessionView) {
             sessions.setOnClickListener {
                 showHide(binding.menuView)
-            }
-            setFabEvent(fab) {
-                newGameDialog()
             }
         }
         binding.createSession.setOnClickListener {
@@ -290,6 +295,9 @@ class EventActivity : AppCompatActivity() {
                     attendeeAdapter.submitList(it ?: listOf())
                 }
             }
-
+        gameSessionViewModel.getSessions(event.id!!)
+            .observe(this) { games ->
+                sessionAdapter.submitList(games)
+            }
     }
 }
