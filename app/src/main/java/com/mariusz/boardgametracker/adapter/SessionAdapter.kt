@@ -40,9 +40,6 @@ class SessionAdapter(private val onItemClick: (game: BoardGame) -> Unit) :
         val item = differ.currentList[position]
         holder.binding.apply {
             gameName.text = item.name
-            item.gameStatus.let {
-                gameStatusIcon.setImageResource(it.iconId)
-            }
 
             eventLayout.setOnClickListener {
                 onItemClick(item)

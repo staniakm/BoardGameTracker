@@ -44,7 +44,7 @@ class EventActivity : AppCompatActivity() {
     private lateinit var attendeeAdapter: AttendeeAdapter
     private lateinit var sessionAdapter: SessionAdapter
 
-    private lateinit var views: List<ViewBinding>
+    private lateinit var  views: List<ViewBinding>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,8 +53,13 @@ class EventActivity : AppCompatActivity() {
 
         gameAdapter = GamesAdapter { Log.i(TAG, "onCreate: game clicked") }
         attendeeAdapter = AttendeeAdapter { Log.i(TAG, "onCreate: attendee clicked") }
-        sessionAdapter = SessionAdapter { Log.i(TAG, "onCreate: attendee clicked") }
-
+        sessionAdapter = SessionAdapter { game -> startGameSession(game) }
+        views = listOf(
+            binding.menuView,
+            binding.gamesView,
+            binding.particpiantsView,
+            binding.sessionView
+        )
         binding.gamesView.rvGames.layoutManager = LinearLayoutManager(this)
         binding.gamesView.rvGames.adapter = gameAdapter
         binding.particpiantsView.rvParticipants.layoutManager = LinearLayoutManager(this)
@@ -62,12 +67,6 @@ class EventActivity : AppCompatActivity() {
         binding.sessionView.rvSessions.layoutManager = LinearLayoutManager(this)
         binding.sessionView.rvSessions.adapter = sessionAdapter
 
-        views = listOf(
-            binding.menuView,
-            binding.gamesView,
-            binding.particpiantsView,
-            binding.sessionView
-        )
         intent.extras?.let { extras ->
             event = extras.getSerializable("event") as Event
             binding.eventName.text = event.name
@@ -151,14 +150,14 @@ class EventActivity : AppCompatActivity() {
                 Log.i(TAG, "newGameDialog: ${spinner.selectedItem as BoardGame}")
 
                 (spinner.selectedItem as BoardGame)?.let {
-                    startNewGameSession(it)
+                    startGameSession(it)
                 }
             }
             .setNegativeButton("Cancel") { _, _ -> }
         alert.show()
     }
 
-    private fun startNewGameSession(it: BoardGame) {
+    private fun startGameSession(it: BoardGame) {
         Intent(this, GameSessionActivity::class.java)
             .apply {
                 putExtra("event", event)
