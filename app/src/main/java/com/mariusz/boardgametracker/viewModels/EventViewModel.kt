@@ -4,15 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.mariusz.boardgametracker.domain.Event
-import com.mariusz.boardgametracker.domain.EventAttendee
-import com.mariusz.boardgametracker.domain.EventGame
-import com.mariusz.boardgametracker.domain.EventStatus
+import com.mariusz.boardgametracker.domain.*
 import com.mariusz.boardgametracker.repository.EventAttendeeRepository
 import com.mariusz.boardgametracker.repository.EventGameRepository
 import com.mariusz.boardgametracker.repository.EventRepository
+import com.mariusz.boardgametracker.repository.ScoringRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -21,7 +18,8 @@ import javax.inject.Inject
 class EventViewModel @Inject constructor(
     private val eventRepository: EventRepository,
     private val eventGameRepository: EventGameRepository,
-    private val eventAttendeeRepository: EventAttendeeRepository
+    private val eventAttendeeRepository: EventAttendeeRepository,
+
 ) : ViewModel() {
 
 

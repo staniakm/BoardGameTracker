@@ -42,3 +42,17 @@ interface EventAttendeeDao {
     fun getAllEventAttendeeIds(eventId: Int): Flow<List<EventAttendee>>
 
 }
+
+@Entity
+data class SessionAttendeeScoring(
+    val sessionId: Long,
+    val attendeeId: Int,
+    val score: Int,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null
+)
+
+@Dao
+interface SessionAttendeeScoringDao {
+    @Insert
+    suspend fun addEventAttendee(eventAttendees: List<SessionAttendeeScoring>)
+}

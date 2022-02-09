@@ -60,4 +60,10 @@ class DatabaseModule {
     fun provideGameSessionDao(appDatabase: EventDatabase): GameSessionDao {
         return appDatabase.getGameSessionDao()
     }
+
+    @Singleton
+    @Provides
+    fun provideAttendeeScoringDao(appDatabase: EventDatabase): SessionAttendeeScoringDao {
+        return appDatabase.getAttendeeScoringDao()
+    }
 }

@@ -13,13 +13,13 @@ class GameSessionRepository @Inject constructor(private val gamesSessionDao: Gam
         return gamesSessionDao.getGameActiveSession(eventId, gameId, SessionStatus.OPENED)
     }
 
-    suspend fun createSession(eventId: Int, gameId: Int, status: SessionStatus) {
-        GameSession(eventId, gameId, SessionStatus.OPENED).let {
+    suspend fun createSession(eventId: Int, gameId: Int, status: SessionStatus): Long {
+        return GameSession(eventId, gameId, SessionStatus.OPENED).let {
             gamesSessionDao.createGameSession(it)
         }
     }
 
-    fun getAllSessions(eventId: Int):Flow<List<GameSession>> {
+    fun getAllSessions(eventId: Int): Flow<List<GameSession>> {
         return gamesSessionDao.getAllEventSessions(eventId)
     }
 
