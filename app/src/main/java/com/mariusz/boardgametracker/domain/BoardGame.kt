@@ -54,10 +54,13 @@ interface GameSessionDao {
     ): Flow<GameSession?>
 
     @Insert
-    suspend fun createGameSession(gameSession: GameSession):Long
+    suspend fun createGameSession(gameSession: GameSession): Long
 
     @Query("select * from GameSession where eventId=:eventId")
-    fun getAllEventSessions(eventId: Int):Flow<List<GameSession>>
+    fun getAllEventSessions(eventId: Int): Flow<List<GameSession>>
+
+    @Query("select * from GameSession where id=:sessionId")
+    fun getSession(sessionId: Long): GameSession
 
 }
 

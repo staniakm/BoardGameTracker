@@ -54,5 +54,8 @@ data class SessionAttendeeScoring(
 @Dao
 interface SessionAttendeeScoringDao {
     @Insert
-    suspend fun addEventAttendee(eventAttendees: List<SessionAttendeeScoring>)
+    suspend fun addEventAttendee(eventAttendees: List<SessionAttendeeScoring>): List<Long>
+
+    @Query("select * from SessionAttendeeScoring where sessionId =:sessionId")
+    fun getAttendees(sessionId: Long): Flow<List<SessionAttendeeScoring>>
 }

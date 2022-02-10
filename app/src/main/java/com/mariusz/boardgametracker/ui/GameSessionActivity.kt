@@ -3,6 +3,7 @@ package com.mariusz.boardgametracker.ui
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mariusz.boardgametracker.adapter.UserScoreAdapter
 import com.mariusz.boardgametracker.databinding.ActivityGameSessionBinding

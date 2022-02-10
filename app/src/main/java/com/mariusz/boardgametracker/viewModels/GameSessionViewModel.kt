@@ -29,19 +29,23 @@ class GameSessionViewModel @Inject constructor(
         return gameSessionRepository.getActiveGameSession(eventId, gameId).asLiveData()
     }
 
-    fun createGameSession(eventId: Int, gameId: Int) = viewModelScope.launch {
-        gameSessionRepository.createSession(eventId, gameId, SessionStatus.OPENED)
-            .let { sessionId ->
-                eventAttendeeRepository.getAllAttendeeIdForEvent(eventId)
-                    .collect { eventAttendees ->
-                        eventAttendees.map { att ->
-                            SessionAttendeeScoring(sessionId, att.attendeeId, 0)
-                        }.let {
-                            sessionAttendeeScoringRepository.createAttendees(it)
+    fun createGameSession(eventId: Int, gameId: Int): LiveData<Long> {
+        val result = MutableLiveData<Long>()
+        viewModelScope.launch {
+            gameSessionRepository.createSession(eventId, gameId, SessionStatus.OPENED)
+                .let { sessionId ->
+                    eventAttendeeRepository.getAllAttendeeIdForEvent(eventId)
+                        .collect { eventAttendees ->
+                            eventAttendees.map { att ->
+                                SessionAttendeeScoring(sessionId, att.attendeeId, 0)
+                            }.let {
+                                sessionAttendeeScoringRepository.createAttendees(it)
+                            }
                         }
-                    }
-            }
-
+                    gameSessionRepository.getSession(sessionId)
+                }
+        }
+        return result
     }
 
     fun getSessions(eventId: Int): LiveData<List<BoardGame>> {

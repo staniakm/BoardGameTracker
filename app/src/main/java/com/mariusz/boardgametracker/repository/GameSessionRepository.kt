@@ -23,5 +23,9 @@ class GameSessionRepository @Inject constructor(private val gamesSessionDao: Gam
         return gamesSessionDao.getAllEventSessions(eventId)
     }
 
+    fun getSession(sessionId: Long):GameSession {
+        return gamesSessionDao.getSession(sessionId)
+    }
+
 
 }
