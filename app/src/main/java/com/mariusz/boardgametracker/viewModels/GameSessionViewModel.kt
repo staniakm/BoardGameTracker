@@ -29,8 +29,8 @@ class GameSessionViewModel @Inject constructor(
         return gameSessionRepository.getActiveGameSession(eventId, gameId).asLiveData()
     }
 
-    fun createGameSession(eventId: Int, gameId: Int): LiveData<Long> {
-        val result = MutableLiveData<Long>()
+    fun createGameSession(eventId: Int, gameId: Int): LiveData<GameSession> {
+        val result = MutableLiveData<GameSession>()
         viewModelScope.launch {
             gameSessionRepository.createSession(eventId, gameId, SessionStatus.OPENED)
                 .let { sessionId ->
@@ -42,7 +42,7 @@ class GameSessionViewModel @Inject constructor(
                                 sessionAttendeeScoringRepository.createAttendees(it)
                             }
                         }
-                    gameSessionRepository.getSession(sessionId)
+                    result.postValue(gameSessionRepository.getSession(sessionId))
                 }
         }
         return result
